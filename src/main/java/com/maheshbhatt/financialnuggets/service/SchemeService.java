@@ -1,6 +1,7 @@
 package com.maheshbhatt.financialnuggets.service;
 
 import com.maheshbhatt.financialnuggets.model.SchemeDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,4 +19,5 @@ public interface SchemeService {
 
     SchemeDTO deleteSchemeById(Long id);
 
+    List<SchemeDTO> parseSchemeCsv(MultipartFile file);
 }

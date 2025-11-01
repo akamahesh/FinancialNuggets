@@ -21,6 +21,8 @@ public class AmcEntity {
     @Column(unique = true, nullable = false)
     private String amcName;
 
+    private String amcId;
+
     private String shortName;
     private String shortDescription;
     private String description;

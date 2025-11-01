@@ -1,7 +1,6 @@
 package com.maheshbhatt.financialnuggets.controller;
 
-import com.maheshbhatt.financialnuggets.model.AmcRequestDTO;
-import com.maheshbhatt.financialnuggets.model.AmcResponseDTO;
+import com.maheshbhatt.financialnuggets.model.AmcDTO;
 import com.maheshbhatt.financialnuggets.service.AmcService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,26 +15,29 @@ public class AmcController {
     private AmcService amcService;
 
     @PostMapping
-    public AmcResponseDTO save(@RequestBody AmcRequestDTO amcRequestDTO) {
-        return amcService.save(amcRequestDTO);
+    public AmcDTO save(@RequestBody AmcDTO amcDTO) {
+        return amcService.save(amcDTO);
     }
 
     @GetMapping
-    public List<AmcResponseDTO> getAllAmcs() {
+    public List<AmcDTO> getAllAmcs() {
         return amcService.getAllAmcs();
     }
 
     @GetMapping("/{id}")
-    public AmcResponseDTO getAmcById(@PathVariable Long id) {
+    public AmcDTO getAmcById(@PathVariable Long id) {
         return amcService.getAmcById(id);
     }
 
     @DeleteMapping("/{id}")
-    public AmcResponseDTO deleteAmcById(@PathVariable Long id) {
+    public AmcDTO deleteAmcById(@PathVariable Long id) {
         return amcService.deleteAmcById(id);
     }
 
-
+    @DeleteMapping("/all")
+    public String deleteAll() {
+        return amcService.deleteAll();
+    }
 
 
 }

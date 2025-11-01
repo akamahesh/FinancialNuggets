@@ -7,11 +7,15 @@ import com.maheshbhatt.financialnuggets.model.SchemeDTO;
 import com.maheshbhatt.financialnuggets.repository.AmcRepostiory;
 import com.maheshbhatt.financialnuggets.repository.SchemeRepository;
 import com.maheshbhatt.financialnuggets.service.SchemeService;
+import com.maheshbhatt.financialnuggets.utils.CsvReader;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -73,7 +77,7 @@ public class SchemeServiceImpl implements SchemeService {
                 .map(entity -> {
                     SchemeDTO dto = new SchemeDTO();
                     BeanUtils.copyProperties(entity, dto);
-                    if(entity.getAmc() != null) {
+                    if (entity.getAmc() != null) {
                         dto.setAmcId(entity.getAmc().getId());
                     }
                     return dto;
@@ -125,5 +129,52 @@ public class SchemeServiceImpl implements SchemeService {
         }
         schemeRepository.deleteById(id);
         return dto;
+    }
+
+    @Override
+    public List<SchemeDTO> parseSchemeCsv(MultipartFile file) {
+        try {
+            List<String[]> csvRows = CsvReader.readCsv(file.getInputStream());
+            //skip header row and process data
+            List<SchemeDTO> schemeDTOs = csvRows.stream()
+                    .skip(1)
+//                    .map(row -> row.length > 1 && row[1] != null ? row[1].trim() : null)
+//                    .filter(name -> name != null && !name.isEmpty())
+//                    .distinct()
+                    .map(row -> {
+                        if (row == null || row.length < 7) {
+                            return null;
+                        }
+
+                        String amcid = row[0] == null ? "" : row[0].trim();
+                        if (amcid.isEmpty()) {
+                            return null;
+                        }
+                        Optional<AmcEntity> amcOptional = amcRepostiory.findByAmcId(amcid);
+                        if (amcOptional.isEmpty()) {
+                            return null;
+                        }
+                        SchemeDTO schemeDTO = getSchemeDTO(row, amcOptional.get());
+                        return schemeDTO;
+                    })
+                    .filter(Objects::nonNull)
+                    .distinct().toList();
+
+
+            return schemeDTOs.stream().map(this::save).toList();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static SchemeDTO getSchemeDTO(String[] row, AmcEntity amcEntity) {
+        SchemeDTO schemeDTO = new SchemeDTO();
+        schemeDTO.setAmcId(amcEntity.getId());
+        schemeDTO.setSchemeCode(row[2] == null ? "" : row[2].trim());
+        schemeDTO.setName(row[3] == null ? "" : row[3].trim());
+        schemeDTO.setType(row[4] == null ? "" : row[4].trim());
+        schemeDTO.setCategory(row[5] == null ? "" : row[5].trim());
+        schemeDTO.setSchemeNavName(row[6] == null ? "" : row[6].trim());
+        return schemeDTO;
     }
 }

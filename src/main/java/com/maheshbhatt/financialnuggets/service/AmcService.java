@@ -1,16 +1,21 @@
 package com.maheshbhatt.financialnuggets.service;
 
-import com.maheshbhatt.financialnuggets.model.AmcRequestDTO;
-import com.maheshbhatt.financialnuggets.model.AmcResponseDTO;
+import com.maheshbhatt.financialnuggets.model.AmcDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface AmcService {
-    AmcResponseDTO save(AmcRequestDTO amcRequestDTO);
+    AmcDTO save(AmcDTO amcDTO);
 
-    List<AmcResponseDTO> getAllAmcs();
+    List<AmcDTO> getAllAmcs();
 
-    AmcResponseDTO getAmcById(Long id);
+    AmcDTO getAmcById(Long id);
 
-    AmcResponseDTO deleteAmcById(Long id);
+    AmcDTO deleteAmcById(Long id);
+
+    String deleteAll();
+
+    List<AmcDTO> parseAmcCsv(MultipartFile file);
+
 }
