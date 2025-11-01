@@ -83,11 +83,47 @@ public class SchemeServiceImpl implements SchemeService {
 
     @Override
     public SchemeDTO getSchemeById(Long id) {
-        return null;
+        Optional<SchemeEntity> optional = schemeRepository.findById(id);
+        if (optional.isEmpty()) {
+            throw new com.maheshbhatt.financialnuggets.exception.AmcNonFoundException("Scheme not found with ID: " + id);
+        }
+        SchemeEntity entity = optional.get();
+        SchemeDTO dto = new SchemeDTO();
+        BeanUtils.copyProperties(entity, dto);
+        if (entity.getAmc() != null) {
+            dto.setAmcId(entity.getAmc().getId());
+        }
+        return dto;
+    }
+
+    @Override
+    public SchemeDTO getSchemeByCode(String schemeCode) {
+        Optional<SchemeEntity> optional = schemeRepository.findBySchemeCode(schemeCode);
+        if (optional.isEmpty()) {
+            throw new com.maheshbhatt.financialnuggets.exception.AmcNonFoundException("Scheme not found with code: " + schemeCode);
+        }
+        SchemeEntity entity = optional.get();
+        SchemeDTO dto = new SchemeDTO();
+        BeanUtils.copyProperties(entity, dto);
+        if (entity.getAmc() != null) {
+            dto.setAmcId(entity.getAmc().getId());
+        }
+        return dto;
     }
 
     @Override
     public SchemeDTO deleteSchemeById(Long id) {
-        return null;
+        Optional<SchemeEntity> optional = schemeRepository.findById(id);
+        if (optional.isEmpty()) {
+            throw new com.maheshbhatt.financialnuggets.exception.AmcNonFoundException("Scheme not found with ID: " + id);
+        }
+        SchemeEntity entity = optional.get();
+        SchemeDTO dto = new SchemeDTO();
+        BeanUtils.copyProperties(entity, dto);
+        if (entity.getAmc() != null) {
+            dto.setAmcId(entity.getAmc().getId());
+        }
+        schemeRepository.deleteById(id);
+        return dto;
     }
 }

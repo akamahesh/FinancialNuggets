@@ -13,6 +13,8 @@ public interface SchemeService {
     List<SchemeDTO> getAllSchemesByAmcId(Long id);
 
     SchemeDTO getSchemeById(Long id);
+    
+    SchemeDTO getSchemeByCode(String schemeCode);
 
     SchemeDTO deleteSchemeById(Long id);
 

@@ -1,8 +1,10 @@
-package com.maheshbhatt.financialnuggets.controller;
+package com.maheshbhatt.financialnuggets.controller.ui;
 
 import com.maheshbhatt.financialnuggets.model.AmcRequestDTO;
 import com.maheshbhatt.financialnuggets.model.AmcResponseDTO;
+import com.maheshbhatt.financialnuggets.model.SchemeDTO;
 import com.maheshbhatt.financialnuggets.service.AmcService;
+import com.maheshbhatt.financialnuggets.service.SchemeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,9 @@ public class AmcUIController {
 
     @Autowired
     private AmcService amcService;
+
+    @Autowired
+    private SchemeService schemeService;
 
     @GetMapping
     public String listAmcs(Model model) {
@@ -41,7 +46,9 @@ public class AmcUIController {
     @GetMapping("/{id}")
     public String getAmcDetail(@PathVariable Long id, Model model) {
         AmcResponseDTO amc = amcService.getAmcById(id);
+        List<SchemeDTO> schemes = schemeService.getAllSchemesByAmcId(id);
         model.addAttribute("amc", amc);
+        model.addAttribute("schemes", schemes);
         return "amc/detail";
     }
 

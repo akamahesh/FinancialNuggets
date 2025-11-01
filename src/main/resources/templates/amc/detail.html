@@ -192,7 +192,7 @@
                 <div class="detail-header">
                     <div>
                         <h1 th:text="${amc.amcName}">AMC Name</h1>
-                        <div style="color: #667eea; font-weight: 600; font-size: 16px;" th:text="'ID: ' + ${amc.amcId}">ID</div>
+                        <div style="color: #667eea; font-weight: 600; font-size: 16px;" th:text="'ID: ' + ${amc.id}">ID</div>
                     </div>
                     <div class="actions">
                         <a href="/amcs" class="btn btn-secondary">← Back to List</a>
@@ -217,7 +217,7 @@
                         <h2>Basic Information</h2>
                         <div class="detail-field">
                             <label>AMC ID</label>
-                            <div class="value" th:text="${amc.amcId ?: 'Not provided'}" th:class="${amc.amcId == null or amc.amcId.isEmpty() ? 'value empty' : 'value'}">AMC ID</div>
+                            <div class="value" th:text="${amc.id ?: 'Not provided'}" th:class="${amc.id == null ? 'value empty' : 'value'}">AMC ID</div>
                         </div>
                         <div class="detail-field">
                             <label>Short Name</label>
@@ -246,6 +246,30 @@
                         <h2>Full Description</h2>
                         <div class="detail-field">
                             <div class="value" th:text="${amc.description}">Description</div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h2>Schemes</h2>
+                            <a th:href="@{'/schemes/new?amcId=' + ${amc.id}}" class="btn btn-success" style="padding: 8px 16px; font-size: 14px;">+ Add Scheme</a>
+                        </div>
+                        <div id="scheme-list" th:fragment="scheme-list">
+                            <div th:if="${schemes != null and !schemes.isEmpty()}">
+                                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">
+                                    <div th:each="scheme : ${schemes}" style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                                        <div style="color: #667eea; font-weight: 600; margin-bottom: 8px;" th:text="'Code: ' + ${scheme.schemeCode}">Code</div>
+                                        <h3 style="color: #333; margin-bottom: 8px; font-size: 1.2em;" th:text="${scheme.name}">Scheme Name</h3>
+                                        <div style="color: #6b7280; font-size: 14px; margin-bottom: 10px;" th:if="${scheme.type != null}" th:text="'Type: ' + ${scheme.type}">Type</div>
+                                        <div style="color: #6b7280; font-size: 14px; margin-bottom: 15px;" th:if="${scheme.category != null}" th:text="'Category: ' + ${scheme.category}">Category</div>
+                                        <a th:href="@{'/schemes/' + ${scheme.id}}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:if="${schemes == null or schemes.isEmpty()}" style="text-align: center; padding: 30px; color: #6b7280;">
+                                <p>No schemes found for this AMC.</p>
+                                <a th:href="@{'/schemes/new?amcId=' + ${amc.id}}" class="btn btn-success" style="margin-top: 15px;">+ Add First Scheme</a>
+                            </div>
                         </div>
                     </div>
                 </div>

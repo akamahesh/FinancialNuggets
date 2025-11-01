@@ -242,7 +242,7 @@
         <div id="amc-list" th:fragment="amc-list">
             <div th:if="${amcs != null and !amcs.isEmpty()}" class="amc-grid">
                 <div th:each="amc : ${amcs}" class="amc-card">
-                    <div class="amc-id" th:text="'ID: ' + ${amc.amcId}">ID: </div>
+                    <div class="amc-id" th:text="'ID: ' + ${amc.id}">ID: </div>
                     <h3 th:text="${amc.amcName}">AMC Name</h3>
                     <div class="short-name" th:if="${amc.shortName != null and !amc.shortName.isEmpty()}" th:text="'Short Name: ' + ${amc.shortName}">Short Name</div>
                     <div class="description" th:if="${amc.shortDescription != null and !amc.shortDescription.isEmpty()}" th:text="${amc.shortDescription}">Description</div>

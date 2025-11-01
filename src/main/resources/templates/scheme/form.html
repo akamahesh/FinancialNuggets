@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create AMC</title>
+    <title>Create Scheme</title>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <style>
         * {
@@ -57,7 +57,7 @@
         }
 
         .form-group input,
-        .form-group textarea {
+        .form-group select {
             width: 100%;
             padding: 12px;
             border: 2px solid #e5e7eb;
@@ -68,14 +68,9 @@
         }
 
         .form-group input:focus,
-        .form-group textarea:focus {
+        .form-group select:focus {
             outline: none;
             border-color: #667eea;
-        }
-
-        .form-group textarea {
-            min-height: 100px;
-            resize: vertical;
         }
 
         .form-group small {
@@ -127,95 +122,60 @@
         .btn-secondary:hover {
             background: #4b5563;
         }
-
-        .alert {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .alert-success {
-            background: #d1fae5;
-            color: #065f46;
-            border: 1px solid #10b981;
-        }
-
-        .alert-error {
-            background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #ef4444;
-        }
-
-        .htmx-indicator {
-            display: none;
-        }
-
-        .htmx-request .htmx-indicator {
-            display: inline-block;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="form-container">
             <div class="form-header">
-                <h1>Create New AMC</h1>
-                <p>Fill in the details below to create a new Asset Management Company</p>
+                <h1>Create New Scheme</h1>
+                <p>Fill in the details below to create a new scheme</p>
             </div>
 
             <form 
-                hx-post="/amcs" 
-                hx-target="#amc-detail-container"
-                hx-swap="innerHTML"
-                hx-indicator="#loading-indicator"
-                id="amc-form">
+                action="/schemes" 
+                method="post" 
+                id="scheme-form">
                 
+                <input type="hidden" id="amcId" name="amcId" th:value="${scheme?.amcId}" required>
+
                 <div class="form-group">
-                    <label for="amcName">AMC Name *</label>
-                    <input type="text" id="amcName" name="amcName" th:value="${amc?.amcName}" required>
-                    <small>Full name of the Asset Management Company</small>
+                    <label for="schemeCode">Scheme Code *</label>
+                    <input type="text" id="schemeCode" name="schemeCode" th:value="${scheme?.schemeCode}" required>
+                    <small>Unique identifier code for the scheme</small>
                 </div>
 
                 <div class="form-group">
-                    <label for="shortName">Short Name</label>
-                    <input type="text" id="shortName" name="shortName" th:value="${amc?.shortName}">
-                    <small>Abbreviated name for the AMC</small>
+                    <label for="name">Scheme Name *</label>
+                    <input type="text" id="name" name="name" th:value="${scheme?.name}" required>
+                    <small>Full name of the scheme</small>
                 </div>
 
                 <div class="form-group">
-                    <label for="websiteUrl">Website URL</label>
-                    <input type="url" id="websiteUrl" name="websiteUrl" th:value="${amc?.websiteUrl}" placeholder="https://example.com">
-                    <small>Official website URL of the AMC</small>
+                    <label for="type">Type</label>
+                    <input type="text" id="type" name="type" th:value="${scheme?.type}">
+                    <small>Type of scheme (e.g., Equity, Debt, Hybrid)</small>
                 </div>
 
                 <div class="form-group">
-                    <label for="imgUrl">Image URL</label>
-                    <input type="url" id="imgUrl" name="imgUrl" th:value="${amc?.imgUrl}" placeholder="https://example.com/image.jpg">
-                    <small>URL to the AMC logo or image</small>
+                    <label for="category">Category</label>
+                    <input type="text" id="category" name="category" th:value="${scheme?.category}">
+                    <small>Category classification of the scheme</small>
                 </div>
 
                 <div class="form-group">
-                    <label for="shortDescription">Short Description</label>
-                    <textarea id="shortDescription" name="shortDescription" th:text="${amc?.shortDescription}" placeholder="Brief description..."></textarea>
-                    <small>A brief summary about the AMC</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="description">Full Description</label>
-                    <textarea id="description" name="description" th:text="${amc?.description}" placeholder="Detailed description..."></textarea>
-                    <small>Comprehensive description of the AMC</small>
+                    <label for="schemeNavName">NAV Name</label>
+                    <input type="text" id="schemeNavName" name="schemeNavName" th:value="${scheme?.schemeNavName}">
+                    <small>Net Asset Value name</small>
                 </div>
 
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-success">
-                        <span id="loading-indicator" class="htmx-indicator">Creating...</span>
-                        <span>Create AMC</span>
-                    </button>
-                    <a href="/amcs" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-success">Create Scheme</button>
+                    <a th:href="${scheme?.amcId != null ? '/amcs/' + scheme.amcId : '/schemes'}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
 
-            <div id="amc-detail-container"></div>
+            <div id="scheme-detail-container"></div>
         </div>
     </div>
 </body>

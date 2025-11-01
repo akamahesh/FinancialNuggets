@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scheme Details</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .detail-container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .detail-header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+        }
+
+        .btn-success {
+            background: #10b981;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+        }
+
+        .detail-section {
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 20px;
+        }
+
+        .detail-section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .detail-field {
+            margin-bottom: 15px;
+        }
+
+        .detail-field label {
+            display: block;
+            color: #6b7280;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-field .value {
+            color: #333;
+            font-size: 16px;
+        }
+
+        .success-message {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #10b981;
+        }
+
+        .holding-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 10px;
+        }
+
+        .holding-card h4 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="detail-container">
+            <div th:fragment="scheme-detail" th:if="${scheme != null}">
+                <div class="success-message">
+                    <h3>✅ Scheme Created Successfully!</h3>
+                    <p>The scheme has been added.</p>
+                    <div style="display: flex; gap: 10px;">
+                        <a th:href="${scheme.amcId != null ? '/amcs/' + scheme.amcId : '/schemes'}" class="btn">Back</a>
+                        <a th:href="@{'/schemes/' + ${scheme.id}}" class="btn btn-secondary">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${scheme != null}">
+                <div class="detail-header">
+                    <div>
+                        <h1 th:text="${scheme.name}">Scheme Name</h1>
+                        <div style="color: #667eea; font-weight: 600; font-size: 16px;" th:text="'Code: ' + ${scheme.schemeCode}">Code</div>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <a th:href="${scheme.amcId != null ? '/amcs/' + scheme.amcId : '/schemes'}" class="btn btn-secondary">← Back</a>
+                        <button 
+                            class="btn btn-danger"
+                            th:hx-delete="@{'/schemes/' + ${scheme.id}}"
+                            hx-target="body"
+                            hx-push-url="/schemes"
+                            hx-confirm="Are you sure you want to delete this scheme?">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h2>Basic Information</h2>
+                    <div class="detail-field">
+                        <label>Scheme Code</label>
+                        <div class="value" th:text="${scheme.schemeCode}">Scheme Code</div>
+                    </div>
+                    <div class="detail-field">
+                        <label>Name</label>
+                        <div class="value" th:text="${scheme.name}">Name</div>
+                    </div>
+                    <div class="detail-field" th:if="${scheme.type != null}">
+                        <label>Type</label>
+                        <div class="value" th:text="${scheme.type}">Type</div>
+                    </div>
+                    <div class="detail-field" th:if="${scheme.category != null}">
+                        <label>Category</label>
+                        <div class="value" th:text="${scheme.category}">Category</div>
+                    </div>
+                    <div class="detail-field" th:if="${scheme.schemeNavName != null}">
+                        <label>NAV Name</label>
+                        <div class="value" th:text="${scheme.schemeNavName}">NAV Name</div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2>Holdings</h2>
+                        <a th:href="@{'/holdings/new?amcId=' + ${scheme.amcId} + '&schemeCode=' + ${scheme.schemeCode}}" class="btn btn-success" style="padding: 8px 16px; font-size: 14px;">+ Add Holding</a>
+                    </div>
+                    <div id="holding-list" th:fragment="holding-list">
+                        <div th:if="${holdings != null and !holdings.isEmpty()}">
+                            <div th:each="holding : ${holdings}" class="holding-card">
+                                <h4 th:text="${holding.name}">Holding Name</h4>
+                                <div style="color: #6b7280; font-size: 14px; margin-bottom: 5px;" th:if="${holding.isin != null}" th:text="'ISIN: ' + ${holding.isin}">ISIN</div>
+                                <div style="color: #6b7280; font-size: 14px; margin-bottom: 5px;" th:text="'Quantity: ' + ${holding.quantity}">Quantity</div>
+                                <div style="color: #6b7280; font-size: 14px; margin-bottom: 5px;" th:if="${holding.marketValue != null}" th:text="'Market Value: ' + ${holding.marketValue}">Market Value</div>
+                                <div style="color: #6b7280; font-size: 14px; margin-bottom: 10px;" th:if="${holding.percentageOfAum != null}" th:text="'% of AUM: ' + ${holding.percentageOfAum}">% of AUM</div>
+                                <a th:href="@{'/holdings/' + ${holding.id}}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">View Details</a>
+                            </div>
+                        </div>
+                        <div th:if="${holdings == null or holdings.isEmpty()}" style="text-align: center; padding: 30px; color: #6b7280;">
+                            <p>No holdings found for this scheme.</p>
+                            <a th:href="@{'/holdings/new?amcId=' + ${scheme.amcId} + '&schemeCode=' + ${scheme.schemeCode}}" class="btn btn-success" style="margin-top: 15px;">+ Add First Holding</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
