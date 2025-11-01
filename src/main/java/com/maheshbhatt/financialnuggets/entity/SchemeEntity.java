@@ -26,5 +26,6 @@ public class SchemeEntity {
     private String category;
     private String schemeNavName;
     private LocalDate launchDate;
+    private LocalDate closureDate;
 
 }
