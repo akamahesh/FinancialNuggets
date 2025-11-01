@@ -30,7 +30,7 @@ public class AmcController {
         return amcService.getAmcById(id);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public AmcResponseDTO deleteAmcById(@PathVariable Long id) {
         return amcService.deleteAmcById(id);
     }
