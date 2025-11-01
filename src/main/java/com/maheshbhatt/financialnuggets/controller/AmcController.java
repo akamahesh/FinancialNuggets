@@ -25,5 +25,17 @@ public class AmcController {
         return amcService.getAllAmcs();
     }
 
+    @GetMapping("/{id}")
+    public AmcResponseDTO getAmcById(@PathVariable Long id) {
+        return amcService.getAmcById(id);
+    }
+
+    @DeleteMapping
+    public AmcResponseDTO deleteAmcById(@PathVariable Long id) {
+        return amcService.deleteAmcById(id);
+    }
+
+
+
 
 }

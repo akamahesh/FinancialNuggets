@@ -1,6 +1,7 @@
 package com.maheshbhatt.financialnuggets.service.impl;
 
 import com.maheshbhatt.financialnuggets.entity.AmcEntity;
+import com.maheshbhatt.financialnuggets.exception.AmcNonFoundException;
 import com.maheshbhatt.financialnuggets.model.AmcRequestDTO;
 import com.maheshbhatt.financialnuggets.model.AmcResponseDTO;
 import com.maheshbhatt.financialnuggets.repository.AmcRepostiory;
@@ -40,12 +41,23 @@ public class AmcServiceImpl implements AmcService {
     }
 
     @Override
-    public AmcResponseDTO getAmcById(String amcId) {
-        return null;
+    public AmcResponseDTO getAmcById(Long id) {
+        return amcRepostiory.findById(id)
+                .map(entity -> {
+                    AmcResponseDTO dto = new AmcResponseDTO();
+                    BeanUtils.copyProperties(entity, dto);
+                    return dto;
+                })
+                .orElseThrow(() -> new AmcNonFoundException("Amc not found with ID: " + id));
     }
 
     @Override
-    public String deleteAmcById(String amcId) {
-        return "";
+    public AmcResponseDTO deleteAmcById(Long id) {
+        AmcEntity amcEntity = amcRepostiory.findById(id)
+                .orElseThrow(() -> new AmcNonFoundException("Amc not found with ID: " + id));
+        AmcResponseDTO dto = new AmcResponseDTO();
+        BeanUtils.copyProperties(amcEntity, dto);
+        amcRepostiory.deleteById(dto.getId());
+        return dto;
     }
 }
