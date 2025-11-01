@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,10 +17,10 @@ public class AmcEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true, nullable = false)
-    private String amcId;
+
     @Column(unique = true, nullable = false)
     private String amcName;
+
     private String shortName;
     private String shortDescription;
     private String description;
@@ -30,5 +31,7 @@ public class AmcEntity {
     @UpdateTimestamp
     private Date updateAt;
 
+    @OneToMany(mappedBy = "amc", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<SchemeEntity> schemes;
 
 }

@@ -16,12 +16,16 @@ public class SchemeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String amcId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "amc_id", referencedColumnName = "id", nullable = false)
+    private AmcEntity amc;
+
     @Column(name = "code", nullable = false, unique = true)
     private String schemeCode;
+
     @Column(nullable = false)
     private String name;
+
     private String type;
     private String category;
     private String schemeNavName;

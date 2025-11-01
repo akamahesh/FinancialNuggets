@@ -6,7 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AmcRequestDTO {
-    private String amcId;
     private String amcName;
     private String shortName;
     private String websiteUrl;

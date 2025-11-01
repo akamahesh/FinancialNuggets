@@ -26,7 +26,7 @@ public class SchemeController {
         return schemeService.getAllSchemes();
     }
 
-    @GetMapping("/{amcId}")
+    @GetMapping("/amc/{amcId}")
     public List<SchemeDTO> getAllSchemesByAmcId(
             @PathVariable Long amcId
     ) {

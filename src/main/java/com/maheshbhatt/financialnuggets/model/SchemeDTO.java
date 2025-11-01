@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Setter
 public class SchemeDTO {
     private Long id;
-    private String amcId;
+    private Long amcId;
     private String schemeCode;
     private String name;
     private String type;

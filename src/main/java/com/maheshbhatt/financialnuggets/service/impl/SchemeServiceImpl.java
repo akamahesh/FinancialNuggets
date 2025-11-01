@@ -1,5 +1,6 @@
 package com.maheshbhatt.financialnuggets.service.impl;
 
+import com.maheshbhatt.financialnuggets.entity.AmcEntity;
 import com.maheshbhatt.financialnuggets.entity.SchemeEntity;
 import com.maheshbhatt.financialnuggets.exception.AmcIdMissingException;
 import com.maheshbhatt.financialnuggets.model.SchemeDTO;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SchemeServiceImpl implements SchemeService {
@@ -24,15 +26,27 @@ public class SchemeServiceImpl implements SchemeService {
     @Override
     public SchemeDTO save(SchemeDTO schemeRequestDTO) {
         SchemeEntity entity = new SchemeEntity();
-        if (schemeRequestDTO.getAmcId() == null || schemeRequestDTO.getAmcId().isEmpty()) {
+        if (schemeRequestDTO.getAmcId() == null) {
             throw new AmcIdMissingException("Amc Id is missing in the request");
         }
-//        AmcEntity amcEntity = amcRepostiory.findById()
 
-        BeanUtils.copyProperties(schemeRequestDTO, entity);
+        // Fetch the amcEntity by id
+        Optional<AmcEntity> amcOptional = amcRepostiory.findById(schemeRequestDTO.getAmcId());
+        if (amcOptional.isEmpty()) {
+            throw new AmcIdMissingException("Amc Entity not found for the given Id: " + schemeRequestDTO.getAmcId());
+        }
+        //set the amc relationship
+        entity.setAmc(amcOptional.get());
+        entity.setSchemeCode(schemeRequestDTO.getSchemeCode());
+        entity.setName(schemeRequestDTO.getName());
+        entity.setType(schemeRequestDTO.getType());
+        entity.setCategory(schemeRequestDTO.getCategory());
+        entity.setSchemeNavName(schemeRequestDTO.getSchemeNavName());
+
         SchemeEntity saved = schemeRepository.save(entity);
         SchemeDTO responseDTO = new SchemeDTO();
         BeanUtils.copyProperties(saved, responseDTO);
+        responseDTO.setAmcId(saved.getAmc().getId());
         return responseDTO;
     }
 
@@ -42,6 +56,10 @@ public class SchemeServiceImpl implements SchemeService {
         List<SchemeDTO> schemeDTOs = schemeEntities.stream().map(entity -> {
             SchemeDTO dto = new SchemeDTO();
             BeanUtils.copyProperties(entity, dto);
+            // set amcid from the relationship
+            if (entity.getAmc() != null) {
+                dto.setAmcId(entity.getAmc().getId());
+            }
             return dto;
         }).toList();
         return schemeDTOs;
@@ -50,11 +68,16 @@ public class SchemeServiceImpl implements SchemeService {
     @Override
     public List<SchemeDTO> getAllSchemesByAmcId(Long id) {
         List<SchemeEntity> schemeEntities = schemeRepository.findAll();
-        List<SchemeDTO> schemeDTOs = schemeEntities.stream().filter(sch -> sch.getAmcId().equals(id)).map(entity -> {
-            SchemeDTO dto = new SchemeDTO();
-            BeanUtils.copyProperties(entity, dto);
-            return dto;
-        }).toList();
+        List<SchemeDTO> schemeDTOs = schemeEntities.stream()
+                .filter(sch -> sch.getAmc() != null && sch.getAmc().getId().equals(id))
+                .map(entity -> {
+                    SchemeDTO dto = new SchemeDTO();
+                    BeanUtils.copyProperties(entity, dto);
+                    if(entity.getAmc() != null) {
+                        dto.setAmcId(entity.getAmc().getId());
+                    }
+                    return dto;
+                }).toList();
         return schemeDTOs;
     }
 

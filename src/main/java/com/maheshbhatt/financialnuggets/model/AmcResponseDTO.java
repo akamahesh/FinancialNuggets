@@ -7,7 +7,6 @@ import lombok.Setter;
 @Setter
 public class AmcResponseDTO {
     private Long id;
-    private String amcId;
     private String amcName;
     private String shortName;
     private String websiteUrl;
