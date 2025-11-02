@@ -28,10 +28,10 @@ public class HoldingEntity {
     private Long quantity;
 
     @Column(nullable = false)
-    private BigDecimal marketValue;
+    private Long marketValue;
 
     @Column(nullable = false)
-    private BigDecimal percentageOfAum;
+    private Long percentageOfAum;
 
     private LocalDate reportingDate;
 
