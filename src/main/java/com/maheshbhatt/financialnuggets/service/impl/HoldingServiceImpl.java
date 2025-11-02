@@ -29,8 +29,26 @@ public class HoldingServiceImpl implements HoldingService {
 
     @Override
     public HoldingDTO save(HoldingDTO holdingDTO) {
-        HoldingEntity entity = new HoldingEntity();
-        BeanUtils.copyProperties(holdingDTO, entity);
+        // Check if a record with the same isin and reportingDate already exists
+        Optional<HoldingEntity> existing = holdingRepository
+                .findByIsinAndReportingDate(holdingDTO.getIsin(), holdingDTO.getReportingDate());
+
+        HoldingEntity entity;
+        if (existing.isPresent()) {
+            // Update existing record
+            entity = existing.get();
+            BeanUtils.copyProperties(holdingDTO, entity, "id", "isin", "reportingDate");
+        } else {
+            // Create new record
+            entity = new HoldingEntity();
+            BeanUtils.copyProperties(holdingDTO, entity);
+        }
+
+        // Handle percentageOfAum conversion from Long to BigDecimal
+        if (holdingDTO.getPercentageOfAum() != null) {
+            entity.setPercentageOfAum(holdingDTO.getPercentageOfAum());
+        }
+
         // Handle percentageOfAum conversion from Long to BigDecimal
         if (holdingDTO.getPercentageOfAum() != null) {
             entity.setPercentageOfAum(holdingDTO.getPercentageOfAum());
@@ -87,6 +105,12 @@ public class HoldingServiceImpl implements HoldingService {
             throw new RuntimeException("Holding with id " + id + " not found");
         }
         holdingRepository.deleteById(id);
+    }
+
+    @Override
+    public String deleteAll() {
+        holdingRepository.deleteAll();
+        return "All Deleted";
     }
 
     @Override
@@ -217,10 +241,8 @@ public class HoldingServiceImpl implements HoldingService {
                 holdingDTO.setReportingDate(reportingDate);
                 holdings.add(holdingDTO);
             }
-            for (HoldingDTO holding : holdings) {
-                save(holding);
-            }
-            return holdings;
+            List<HoldingDTO> holdingEnitites = holdings.stream().map(this::save).toList();
+            return holdingEnitites;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

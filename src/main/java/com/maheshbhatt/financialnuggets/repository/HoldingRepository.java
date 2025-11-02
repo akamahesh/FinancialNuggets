@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface HoldingRepository extends JpaRepository<HoldingEntity, Long> {
 
@@ -17,4 +18,6 @@ public interface HoldingRepository extends JpaRepository<HoldingEntity, Long> {
     List<HoldingEntity> findByReportingDate(LocalDate reportingDate);
 
     List<HoldingEntity> findByAmcIdAndSchemeCodeAndReportingDate(Long amcId, String schemeCode, LocalDate reportingDate);
+
+    Optional<HoldingEntity> findByIsinAndReportingDate(String isin, LocalDate reportingDate);
 }

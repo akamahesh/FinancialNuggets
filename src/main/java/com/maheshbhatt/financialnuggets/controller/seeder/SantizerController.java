@@ -33,6 +33,11 @@ public class SantizerController {
         return "Sanitize AMC data - Not Implemented Yet";
     }
 
+    @PostMapping("/holdings")
+    public String sanitizeHoldings() {
+        return "Sanitized Holdings data " + holdingService.deleteAll();
+    }
+
     @GetMapping("/schemes")
     public List<SchemeDTO> sanitizeSchemes() {
 

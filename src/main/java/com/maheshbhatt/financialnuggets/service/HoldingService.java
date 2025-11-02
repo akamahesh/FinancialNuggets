@@ -12,6 +12,7 @@ public interface HoldingService {
     List<HoldingDTO> getAllHoldings();
     HoldingDTO getHoldingById(Long id);
     void deleteHoldingById(Long id);
+    String deleteAll();
     HoldingDTO updateHolding(Long id, HoldingDTO holdingDTO);
     List<HoldingDTO> getHoldingsByAmcId(Long amcId);
     List<HoldingDTO> getHoldingsBySchemeCode(String schemeCode);

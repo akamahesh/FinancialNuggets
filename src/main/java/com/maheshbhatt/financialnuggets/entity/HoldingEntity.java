@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name = "holdings")
+@Table(name = "holdings", uniqueConstraints = @UniqueConstraint(columnNames = {"isin", "reportingDate"}))
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HoldingEntity {
 
@@ -19,9 +19,14 @@ public class HoldingEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+    @Column(nullable = false)
     private Long amcId;
+    @Column(nullable = false)
     private String schemeCode;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String isin;
 
     @Column(nullable = false)
@@ -33,6 +38,7 @@ public class HoldingEntity {
     @Column(nullable = false)
     private BigDecimal percentageOfAum;
 
+    @Column(nullable = false)
     private LocalDate reportingDate;
 
 }
