@@ -1,6 +1,7 @@
 package com.maheshbhatt.financialnuggets.controller.seeder;
 
 import com.maheshbhatt.financialnuggets.model.AmcDTO;
+import com.maheshbhatt.financialnuggets.model.HoldingDTO;
 import com.maheshbhatt.financialnuggets.model.SchemeDTO;
 import com.maheshbhatt.financialnuggets.service.AmcService;
 import com.maheshbhatt.financialnuggets.service.HoldingService;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -46,7 +48,14 @@ public class DataSeederController {
         return schemeDTOS;
     }
 
-
+    @PostMapping(value = "/holdings", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public List<HoldingDTO> seedHoldings(@RequestPart("file") MultipartFile file) {
+        if (file == null || !file.getOriginalFilename().endsWith(".csv")) {
+            throw new IllegalArgumentException("Invalid file. Please upload a CSV file.");
+        }
+        List<HoldingDTO> holdingDTOS = new ArrayList<>();
+        return holdingDTOS;
+    }
 
 
 }

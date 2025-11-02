@@ -132,6 +132,12 @@ public class SchemeServiceImpl implements SchemeService {
     }
 
     @Override
+    public String deleteAllSchemes() {
+        schemeRepository.deleteAll();
+        return "Deleted all schemes successfully";
+    }
+
+    @Override
     public List<SchemeDTO> parseSchemeCsv(MultipartFile file) {
         try {
             List<String[]> csvRows = CsvReader.readCsv(file.getInputStream());

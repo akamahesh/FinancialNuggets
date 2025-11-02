@@ -18,6 +18,7 @@ public interface SchemeService {
     SchemeDTO getSchemeByCode(String schemeCode);
 
     SchemeDTO deleteSchemeById(Long id);
+    String deleteAllSchemes();
 
     List<SchemeDTO> parseSchemeCsv(MultipartFile file);
 }
