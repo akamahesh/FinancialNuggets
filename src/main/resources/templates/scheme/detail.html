@@ -171,6 +171,10 @@
                 <div class="detail-section">
                     <h2>Basic Information</h2>
                     <div class="detail-field">
+                        <label>Amc id</label>
+                        <div class="value" th:text="${scheme.amcId}">AmcId</div>
+                    </div>
+                    <div class="detail-field">
                         <label>Scheme Code</label>
                         <div class="value" th:text="${scheme.schemeCode}">Scheme Code</div>
                     </div>
@@ -203,8 +207,10 @@
                                 <h4 th:text="${holding.name}">Holding Name</h4>
                                 <div style="color: #6b7280; font-size: 14px; margin-bottom: 5px;" th:if="${holding.isin != null}" th:text="'ISIN: ' + ${holding.isin}">ISIN</div>
                                 <div style="color: #6b7280; font-size: 14px; margin-bottom: 5px;" th:text="'Quantity: ' + ${holding.quantity}">Quantity</div>
-                                <div style="color: #6b7280; font-size: 14px; margin-bottom: 5px;" th:if="${holding.marketValue != null}" th:text="'Market Value: ' + ${holding.marketValue}">Market Value</div>
-                                <div style="color: #6b7280; font-size: 14px; margin-bottom: 10px;" th:if="${holding.percentageOfAum != null}" th:text="'% of AUM: ' + ${holding.percentageOfAum}">% of AUM</div>
+                                <div th:if="${holding.marketValue != null}"
+                                     th:text="${T(com.maheshbhatt.financialnuggets.utils.MoneyUtils).toLakhs(holding.marketValue)}">Market Value</div>
+                                <div th:if="${holding.percentageOfAum != null}"
+                                     th:text="${'% of AUM: ' + T(com.maheshbhatt.financialnuggets.utils.PercentageUtils).formatFractionAsPercentString(holding.percentageOfAum, 2)}">% of AUM</div>
                                 <a th:href="@{'/holdings/' + ${holding.id}}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">View Details</a>
                             </div>
                         </div>

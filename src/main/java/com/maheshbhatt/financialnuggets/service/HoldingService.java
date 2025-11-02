@@ -18,6 +18,6 @@ public interface HoldingService {
     List<HoldingDTO> getHoldingsByAmcIdAndSchemeCode(Long amcId, String schemeCode);
     List<HoldingDTO> getHoldingsByReportingDate(LocalDate reportingDate);
     List<HoldingDTO> getHoldingsByAmcIdAndSchemeCodeAndReportingDate(Long amcId, String schemeCode, LocalDate reportingDate);
-    List<HoldingDTO> previewHoldingCsv(MultipartFile file, Long amcId, String schemeCode);
 
+    List<HoldingDTO> parseHoldingCsv(MultipartFile file, Long amcId, String schemeCode);
 }

@@ -6,6 +6,9 @@ import com.maheshbhatt.financialnuggets.model.HoldingDTO;
 import com.maheshbhatt.financialnuggets.repository.HoldingRepository;
 import com.maheshbhatt.financialnuggets.service.HoldingService;
 import com.maheshbhatt.financialnuggets.utils.CsvReader;
+import com.maheshbhatt.financialnuggets.utils.DateParser;
+import com.maheshbhatt.financialnuggets.utils.MoneyUtils;
+import com.maheshbhatt.financialnuggets.utils.PercentageUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,8 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,14 +34,6 @@ public class HoldingServiceImpl implements HoldingService {
         // Handle percentageOfAum conversion from Long to BigDecimal
         if (holdingDTO.getPercentageOfAum() != null) {
             entity.setPercentageOfAum(holdingDTO.getPercentageOfAum());
-        }
-        // Handle reportingDate conversion from String to LocalDate
-        if (holdingDTO.getReportingDate() != null && !holdingDTO.getReportingDate().isEmpty()) {
-            try {
-                entity.setReportingDate(LocalDate.parse(holdingDTO.getReportingDate()));
-            } catch (DateTimeParseException e) {
-                // If parsing fails, leave it null
-            }
         }
         HoldingEntity saved = holdingRepository.save(entity);
         HoldingDTO savedDTO = new HoldingDTO();
@@ -65,11 +58,7 @@ public class HoldingServiceImpl implements HoldingService {
             BeanUtils.copyProperties(entity, dto);
             // Convert BigDecimal to Long for percentageOfAum
             if (entity.getPercentageOfAum() != null) {
-                dto.setPercentageOfAum(entity.getPercentageOfAum().longValue());
-            }
-            // Convert LocalDate to String for reportingDate
-            if (entity.getReportingDate() != null) {
-                dto.setReportingDate(entity.getReportingDate().toString());
+                dto.setPercentageOfAum(entity.getPercentageOfAum());
             }
             return dto;
         }).toList();
@@ -88,10 +77,7 @@ public class HoldingServiceImpl implements HoldingService {
         if (entity.getPercentageOfAum() != null) {
             dto.setPercentageOfAum(entity.getPercentageOfAum());
         }
-        // Convert LocalDate to String for reportingDate
-        if (entity.getReportingDate() != null) {
-            dto.setReportingDate(entity.getReportingDate().toString());
-        }
+
         return dto;
     }
 
@@ -115,24 +101,13 @@ public class HoldingServiceImpl implements HoldingService {
         if (holdingDTO.getPercentageOfAum() != null) {
             entity.setPercentageOfAum(holdingDTO.getPercentageOfAum());
         }
-        // Handle reportingDate conversion from String to LocalDate
-        if (holdingDTO.getReportingDate() != null && !holdingDTO.getReportingDate().isEmpty()) {
-            try {
-                entity.setReportingDate(LocalDate.parse(holdingDTO.getReportingDate()));
-            } catch (DateTimeParseException e) {
-                // If parsing fails, leave it null
-            }
-        }
+
         HoldingEntity saved = holdingRepository.save(entity);
         HoldingDTO responseDTO = new HoldingDTO();
         BeanUtils.copyProperties(saved, responseDTO);
         // Convert BigDecimal back to Long for percentageOfAum
         if (saved.getPercentageOfAum() != null) {
-            responseDTO.setPercentageOfAum(saved.getPercentageOfAum().longValue());
-        }
-        // Convert LocalDate back to String for reportingDate
-        if (saved.getReportingDate() != null) {
-            responseDTO.setReportingDate(saved.getReportingDate().toString());
+            responseDTO.setPercentageOfAum(saved.getPercentageOfAum());
         }
         return responseDTO;
     }
@@ -145,12 +120,9 @@ public class HoldingServiceImpl implements HoldingService {
             BeanUtils.copyProperties(entity, dto);
             // Convert BigDecimal to Long for percentageOfAum
             if (entity.getPercentageOfAum() != null) {
-                dto.setPercentageOfAum(entity.getPercentageOfAum().longValue());
+                dto.setPercentageOfAum(entity.getPercentageOfAum());
             }
-            // Convert LocalDate to String for reportingDate
-            if (entity.getReportingDate() != null) {
-                dto.setReportingDate(entity.getReportingDate().toString());
-            }
+
             return dto;
         }).toList();
     }
@@ -163,11 +135,7 @@ public class HoldingServiceImpl implements HoldingService {
             BeanUtils.copyProperties(entity, dto);
             // Convert BigDecimal to Long for percentageOfAum
             if (entity.getPercentageOfAum() != null) {
-                dto.setPercentageOfAum(entity.getPercentageOfAum().longValue());
-            }
-            // Convert LocalDate to String for reportingDate
-            if (entity.getReportingDate() != null) {
-                dto.setReportingDate(entity.getReportingDate().toString());
+                dto.setPercentageOfAum(entity.getPercentageOfAum());
             }
             return dto;
         }).toList();
@@ -181,12 +149,9 @@ public class HoldingServiceImpl implements HoldingService {
             BeanUtils.copyProperties(entity, dto);
             // Convert BigDecimal to Long for percentageOfAum
             if (entity.getPercentageOfAum() != null) {
-                dto.setPercentageOfAum(entity.getPercentageOfAum().longValue());
+                dto.setPercentageOfAum(entity.getPercentageOfAum());
             }
-            // Convert LocalDate to String for reportingDate
-            if (entity.getReportingDate() != null) {
-                dto.setReportingDate(entity.getReportingDate().toString());
-            }
+
             return dto;
         }).toList();
     }
@@ -199,11 +164,7 @@ public class HoldingServiceImpl implements HoldingService {
             BeanUtils.copyProperties(entity, dto);
             // Convert BigDecimal to Long for percentageOfAum
             if (entity.getPercentageOfAum() != null) {
-                dto.setPercentageOfAum(entity.getPercentageOfAum().longValue());
-            }
-            // Convert LocalDate to String for reportingDate
-            if (entity.getReportingDate() != null) {
-                dto.setReportingDate(entity.getReportingDate().toString());
+                dto.setPercentageOfAum(entity.getPercentageOfAum());
             }
             return dto;
         }).toList();
@@ -217,94 +178,51 @@ public class HoldingServiceImpl implements HoldingService {
             BeanUtils.copyProperties(entity, dto);
             // Convert BigDecimal to Long for percentageOfAum
             if (entity.getPercentageOfAum() != null) {
-                dto.setPercentageOfAum(entity.getPercentageOfAum().longValue());
-            }
-            // Convert LocalDate to String for reportingDate
-            if (entity.getReportingDate() != null) {
-                dto.setReportingDate(entity.getReportingDate().toString());
+                dto.setPercentageOfAum(entity.getPercentageOfAum());
             }
             return dto;
         }).toList();
     }
 
+
     @Override
-    public List<HoldingDTO> previewHoldingCsv(MultipartFile file, Long amcId, String schemeCode) {
+    public List<HoldingDTO> parseHoldingCsv(MultipartFile file, Long amcId, String schemeCode) {
         try {
             List<String[]> csvRows = CsvReader.readCsv(file.getInputStream());
-
-            // Expected CSV format (skip header):
-            // name, isin, quantity, marketValue, percentageOfAum, reportingDate
-            // or: name, isin, quantity, marketValue, percentageOfAum
+            String reportingDateStr = csvRows.get(3)[1];
+            LocalDate reportingDate = DateParser.parseLocalDateOrThrow(reportingDateStr);
 
             List<HoldingDTO> holdings = new ArrayList<>();
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-            for (int i = 1; i < csvRows.size(); i++) { // Skip header row
+            for (int i = 7; i < csvRows.size() - 1; i++) {
                 String[] row = csvRows.get(i);
-                if (row.length < 3) continue; // Skip invalid rows
-
-                HoldingDTO holding = new HoldingDTO();
-                holding.setAmcId(amcId);
-                holding.setSchemeCode(schemeCode);
-
-                // Parse CSV columns
-                int colIndex = 0;
-                if (row.length > colIndex && row[colIndex] != null && !row[colIndex].trim().isEmpty()) {
-                    holding.setName(row[colIndex].trim());
+                String name = row[1] == null ? "" : row[1].trim();
+                if (name.isEmpty()) {
+                    break;
                 }
-                colIndex++;
+                String isin = row[2] == null ? "" : row[2].trim();
+                String industry = row[3] == null ? "" : row[3].trim();
+                Long quantityStr = Long.valueOf(row[4].replace(",", ""));
+                BigDecimal mvInRupees = MoneyUtils.fromLakhsToRupees(MoneyUtils.parseIndianAmount(row[5]));
+                BigDecimal percentageOfAum = PercentageUtils.parsePercentToFraction(row[6]);
 
-                if (row.length > colIndex && row[colIndex] != null && !row[colIndex].trim().isEmpty()) {
-                    holding.setIsin(row[colIndex].trim());
-                }
-                colIndex++;
-
-                if (row.length > colIndex && row[colIndex] != null && !row[colIndex].trim().isEmpty()) {
-                    try {
-                        holding.setQuantity(Long.parseLong(row[colIndex].trim()));
-                    } catch (NumberFormatException e) {
-                        // Skip invalid quantity
-                        continue;
-                    }
-                }
-                colIndex++;
-
-                if (row.length > colIndex && row[colIndex] != null && !row[colIndex].trim().isEmpty()) {
-                    try {
-                        holding.setMarketValue(new BigDecimal(row[colIndex].trim()));
-                    } catch (NumberFormatException e) {
-                        // Skip invalid market value
-                        continue;
-                    }
-                }
-                colIndex++;
-
-                if (row.length > colIndex && row[colIndex] != null && !row[colIndex].trim().isEmpty()) {
-                    try {
-                        BigDecimal percentage = new BigDecimal(row[colIndex].trim());
-                        holding.setPercentageOfAum(percentage.longValue());
-                    } catch (NumberFormatException e) {
-                        // Skip invalid percentage
-                        continue;
-                    }
-                }
-                colIndex++;
-
-                if (row.length > colIndex && row[colIndex] != null && !row[colIndex].trim().isEmpty()) {
-                    try {
-                        LocalDate.parse(row[colIndex].trim(), dateFormatter);
-                        holding.setReportingDate(row[colIndex].trim());
-                    } catch (DateTimeParseException e) {
-                        // If date parsing fails, leave it null
-                    }
-                }
-
-                holdings.add(holding);
+                HoldingDTO holdingDTO = new HoldingDTO();
+                holdingDTO.setAmcId(amcId);
+                holdingDTO.setSchemeCode(schemeCode);
+                holdingDTO.setName(name);
+                holdingDTO.setIsin(isin);
+                holdingDTO.setMarketValue(mvInRupees);
+                holdingDTO.setPercentageOfAum(percentageOfAum);
+                holdingDTO.setQuantity(quantityStr);
+                holdingDTO.setIndustry(industry);
+                holdingDTO.setReportingDate(reportingDate);
+                holdings.add(holdingDTO);
             }
-
+            for (HoldingDTO holding : holdings) {
+                save(holding);
+            }
             return holdings;
         } catch (IOException e) {
-            throw new RuntimeException("Failed to parse CSV file: " + e.getMessage(), e);
+            throw new RuntimeException(e);
         }
     }
 }

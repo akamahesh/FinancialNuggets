@@ -8,10 +8,7 @@ import com.maheshbhatt.financialnuggets.service.HoldingService;
 import com.maheshbhatt.financialnuggets.service.SchemeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -49,11 +46,14 @@ public class DataSeederController {
     }
 
     @PostMapping(value = "/holdings", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public List<HoldingDTO> seedHoldings(@RequestPart("file") MultipartFile file) {
+    public List<HoldingDTO> seedHoldings(@RequestPart("file") MultipartFile file,
+                                         @RequestParam(required = true) Long amcId,
+                                         @RequestParam(required = true) String schemeCode) {
         if (file == null || !file.getOriginalFilename().endsWith(".csv")) {
             throw new IllegalArgumentException("Invalid file. Please upload a CSV file.");
         }
-        List<HoldingDTO> holdingDTOS = new ArrayList<>();
+
+        List<HoldingDTO> holdingDTOS = holdingService.parseHoldingCsv(file, amcId, schemeCode);
         return holdingDTOS;
     }
 
