@@ -220,10 +220,10 @@ public class HoldingServiceImpl implements HoldingService {
             for (int i = 7; i < csvRows.size() - 1; i++) {
                 String[] row = csvRows.get(i);
                 String name = row[1] == null ? "" : row[1].trim();
-                if (name.isEmpty()) {
+                String isin = row[2] == null ? "" : row[2].trim();
+                if (name.isEmpty() || isin.isEmpty()) {
                     break;
                 }
-                String isin = row[2] == null ? "" : row[2].trim();
                 String industry = row[3] == null ? "" : row[3].trim();
                 Long quantityStr = Long.valueOf(row[4].replace(",", ""));
                 BigDecimal mvInRupees = MoneyUtils.fromLakhsToRupees(MoneyUtils.parseIndianAmount(row[5]));
